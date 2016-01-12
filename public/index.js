@@ -175,6 +175,7 @@ function dateToDays(d1,d2)
 	 return result = 1+(date2-date1)/86400000;
 }
 
+
 function rentPrice(tabDriver, tabCar)
 {
 	for(var i=0; i<tabDriver.length; i++)
@@ -188,14 +189,35 @@ function rentPrice(tabDriver, tabCar)
 			if (idCar == tabCar[j].id)
 			{
 				priceKm = dist*tabCar[j].pricePerKm;
-				priceTime = time*tabCar[j].pricePerDay;
+				
+				var priceTime = 0;
+				for(var k=1; k<=time; k++)
+				{
+					if(k==1)
+					{
+						priceTime += tabCar[j].pricePerDay;
+					}
+					if(1<k && k<5)
+					{
+						priceTime += 0.9*(tabCar[j].pricePerDay);
+					}
+					if(4<k && k<11)
+					{
+						priceTime += 0.7*(tabCar[j].pricePerDay);
+
+					}
+					if(k>10)
+					{
+						priceTime += 0.5*(tabCar[j].pricePerDay);
+					}
+				}
 			}
+			var price = priceKm + priceTime;
 		}
-		var price = priceKm + priceTime;
-		
 		tabDriver[i].price = price;
 	}
 }
+
 
 rentPrice(rentals, cars);
 console.log(rentals);
