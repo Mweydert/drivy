@@ -213,14 +213,22 @@ function rentPrice(tabDriver, tabCar)
 				}
 			}
 			var price = priceKm + priceTime;
+			
+			var commission = 0.3*price;
+			var insurance = 0.5*commission;
+			var assistance = time*1;
+			var drivy = commission - insurance - assistance;
+			console.log()
 		}
 		tabDriver[i].price = price;
+		tabDriver[i].commission.insurance = insurance;
+		tabDriver[i].commission.assistance = assistance;
+		tabDriver[i].commission.drivy = drivy;
 	}
 }
 
 
 rentPrice(rentals, cars);
-console.log(rentals);
 
 console.log(cars);
 console.log(rentals);
