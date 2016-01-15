@@ -211,13 +211,19 @@ function rentPrice(tabDriver, tabCar)
 						priceTime += 0.5*(tabCar[j].pricePerDay);
 					}
 				}
+				
+				var deductibleReductionPrice = 0;
+				if(tabDriver[i].options.deductibleReduction == true)
+				{
+					deductibleReductionPrice = 4*time;
+				}
 			}
-			var price = priceKm + priceTime;
+			var price = priceKm + priceTime + deductibleReductionPrice;
 			
-			var commission = 0.3*price;
+			var commission = 0.3*(price-deductibleReductionPrice);
 			var insurance = 0.5*commission;
 			var assistance = time*1;
-			var drivy = commission - insurance - assistance;
+			var drivy = commission - insurance - assistance + deductibleReductionPrice;
 			console.log()
 		}
 		tabDriver[i].price = price;
