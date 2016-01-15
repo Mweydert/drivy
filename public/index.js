@@ -176,20 +176,20 @@ function dateToDays(d1,d2)
 }
 
 
-function rentPrice(tabDriver, tabCar)
+function rentPrice(tabDriver, tabCar, tabActors)
 {
 	for(var i=0; i<tabDriver.length; i++)
 	{
-		var idCar = tabDriver[i].carId;
-		var dist = tabDriver[i].distance;	
 		var time = dateToDays(tabDriver[i].pickupDate, tabDriver[i].returnDate);
 		
 		for(var j=0; j<tabCar.length; j++)
 		{
-			if (idCar == tabCar[j].id)
+			if (tabDriver[i].carId == tabCar[j].id)
 			{
-				priceKm = dist*tabCar[j].pricePerKm;
-				
+				//Prix au km
+				var priceKm = tabDriver[i].distance*tabCar[j].pricePerKm;
+	
+				//Prix durée
 				var priceTime = 0;
 				for(var k=1; k<=time; k++)
 				{
@@ -197,21 +197,22 @@ function rentPrice(tabDriver, tabCar)
 					{
 						priceTime += tabCar[j].pricePerDay;
 					}
-					if(1<k && k<5)
+					else if(1<k && k<5)
 					{
 						priceTime += 0.9*(tabCar[j].pricePerDay);
 					}
-					if(4<k && k<11)
+					else if(4<k && k<11)
 					{
 						priceTime += 0.7*(tabCar[j].pricePerDay);
 
 					}
-					if(k>10)
+					else if(k>10)
 					{
 						priceTime += 0.5*(tabCar[j].pricePerDay);
 					}
 				}
 				
+				//Prix option deductible
 				var deductibleReductionPrice = 0;
 				if(tabDriver[i].options.deductibleReduction == true)
 				{
@@ -224,17 +225,53 @@ function rentPrice(tabDriver, tabCar)
 			var insurance = 0.5*commission;
 			var assistance = time*1;
 			var drivy = commission - insurance - assistance + deductibleReductionPrice;
-			console.log()
 		}
+		
+		
+		//Modification du tableau des locations
 		tabDriver[i].price = price;
 		tabDriver[i].commission.insurance = insurance;
 		tabDriver[i].commission.assistance = assistance;
 		tabDriver[i].commission.drivy = drivy;
+
+		//Modification du tableau des acteurs		
+		for(var j=0; j<tabActors.length; j++)
+		{
+			if(tabDriver[i].id == tabActors[j].rentalId)
+			{
+				for(var l=0; l<tabActors[j].payment.length; l++)
+				{
+					switch(tabActors[j].payment[l].who)
+					{
+						case "driver":
+							tabActors[j].payment[l].amount = tabDriver[i].price;
+						break;
+						
+						case "owner":
+							tabActors[j].payment[l].amount = tabDriver[i].price - commission;
+						break;
+						
+						case "insurance":
+							tabActors[j].payment[l].amount = tabDriver[i].commission.insurance;
+						break;
+						
+						case "assistance":
+							tabActors[j].payment[l].amount = tabDriver[i].commission.assistance;
+						break;
+						
+						case "drivy":
+							tabActors[j].payment[l].amount = tabDriver[i].commission.drivy;
+						break;
+					}
+				}	
+			}
+		}
 	}
 }
 
 
-rentPrice(rentals, cars);
+
+rentPrice(rentals, cars, actors);
 
 console.log(cars);
 console.log(rentals);
