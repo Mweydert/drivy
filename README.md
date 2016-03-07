@@ -1,3 +1,6 @@
+#PERSONAL COMMENT
+The results can be viewed in the 2nd array. The result's values are the amount that needed to be pay /given by/for each actor after the modification.
+
 # DRIVY
 
 > javascript workshop based on drivy
