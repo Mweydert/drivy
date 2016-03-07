@@ -349,7 +349,7 @@ function applyModif(tabDriver, tabCar, tabActors, tabModif)
 					}
 					else if(k>10)
 					{
-						newPriceTime += 0.5*	;
+						newPriceTime += 0.5*dayPrice;
 					}
 				}
 				
